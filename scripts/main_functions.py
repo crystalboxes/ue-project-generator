@@ -5,10 +5,14 @@ import os
 import sys
 import json
 
+def get_json(name):
+    json_data = {}
+    with open(name) as f:
+        json_data = json.load(f)
+    return json_data
 
 def get_base_dir_from_settings():
-    with open("settings.json") as f:
-        settings = json.load(f)
+    settings = get_json("settings.json")
     base_dir = ""
     try:
         base_dir = settings["unreal_project_dir"]

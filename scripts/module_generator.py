@@ -1,16 +1,21 @@
 from scripts.common import *
 
 
-def get_csharp_source(module_name):
+def get_csharp_source(module_name, dependencies=[]):
+    deps = ""
+    if dependencies:
+        for d in dependencies:
+            deps += ', "'+d+'"'
+
     return Source(module_name + '.Build.cs', 'using UnrealBuildTool;\n' +
                   'public class ' + module_name + ' : ModuleRules\n' +
                   '{\n' +
-                  'public ' + module_name + '(ReadOnlyTargetRules Target) : base(Target)\n' +
-                  '{\n' +
-                  'PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;\n' +
-                  'PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });\n' +
-                  'PrivateDependencyModuleNames.AddRange(new string[] {  });\n' +
-                  '}\n' +
+                  '    public ' + module_name + '(ReadOnlyTargetRules Target) : base(Target)\n' +
+                  '    {\n' +
+                  '        PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;\n' +
+                  '        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore"'+deps+' });\n' +
+                  '        PrivateDependencyModuleNames.AddRange(new string[] {  });\n' +
+                  '    }\n' +
                   '}\n')
 
 
@@ -19,27 +24,34 @@ def get_module_h_source(module_name):
                   '#include "CoreMinimal.h"\n')
 
 
-def get_module_cpp_source(module_name):
+def get_module_cpp_source(module_name, is_primary=False):
+    implement_line = ""
+    if is_primary:
+        implement_line = 'IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, ' + \
+            module_name+', "'+module_name+'" );\n'
+    else:
+        implement_line = 'IMPLEMENT_MODULE(FDefaultGameModuleImpl, ' + \
+            module_name+')\n'
     return Source(module_name + '.cpp', '#include "'+module_name+'.h"\n' +
                   '#include "Modules/ModuleManager.h"\n' +
-                  'IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, '+module_name+', "'+module_name+'" );\n')
+                  implement_line)
 
 
-def get_module_directory(name, use_private_public_dirs=True):
+def get_module_directory(name, use_private_public_dirs=True, is_primary=False, dependencies=[]):
     if use_private_public_dirs:
         return Directory(name, [
-            get_csharp_source(name),
+            get_csharp_source(name, dependencies),
         ], [
             Directory("Private", [
-                get_module_cpp_source(name),
+                get_module_cpp_source(name, is_primary),
             ]),
             Directory("Public", [
                 get_module_h_source(name),
             ])
         ])
     return Directory(name, [
-        get_csharp_source(name),
-        get_module_cpp_source(name),
+        get_csharp_source(name, dependencies),
+        get_module_cpp_source(name, is_primary),
         get_module_h_source(name),
     ])
 
@@ -69,7 +81,7 @@ def get_csharp_source_shaders(name):
 
 
 def get_module_cpp_source_shaders(name):
-    return Source(name + '.cpp', '#include "'+module_name+'.h"\n' + '#include "CoreMinimal.h"\n' +
+    return Source(name + '.cpp', '#include "'+name+'.h"\n' + '#include "CoreMinimal.h"\n' +
                   '#include "Modules/ModuleManager.h"\n' +
                   '#include "Runtime/ShaderCore/Public/ShaderCore.h"\n' +
                   '\n' +
