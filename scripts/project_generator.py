@@ -1,5 +1,5 @@
-from common import *
-import module_generator
+from scripts.common import *
+from scripts import module_generator
 
 
 def get_uproject_source(name):

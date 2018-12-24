@@ -1,0 +1,5 @@
+{
+  "name" : "ExamplePlugin",
+  "is_shader_plugin" : "false",
+  "modules" : ["SomeModule"]
+}

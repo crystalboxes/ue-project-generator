@@ -1,4 +1,4 @@
-from common import *
+from scripts.common import *
 
 
 def get_csharp_source(module_name):
@@ -45,7 +45,7 @@ def get_module_directory(name, use_private_public_dirs=True):
 
 
 def get_csharp_source_shaders(name):
-    return Source(module_name + '.Build.cs', 'using System.IO;\n' +
+    return Source(name + '.Build.cs', 'using System.IO;\n' +
                   'namespace UnrealBuildTool.Rules\n' +
                   '{\n' +
                   '    public class '+name+' : ModuleRules\n' +
@@ -54,14 +54,14 @@ def get_csharp_source_shaders(name):
                   '        {\n' +
                   '            PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;\n' +
                   '            var pluginName = Path.GetFileName(PluginDirectory);\n' +
-                  '            var shadersFullPath = Path.Combine(PluginDirectory, "Shaders").Replace("\\", "/");\n' +
+                  '            var shadersFullPath = Path.Combine(PluginDirectory, "Shaders").Replace("\\\\", "/");\n' +
                   '            var shadersVirtualPath = "/Plugin/" + pluginName;\n' +
-                  '            PublicDefinitions.Add(System.String.Format("'+name.upper()+'_SHADERS_FULL_PATH=\"{0}\"", shadersFullPath));\n' +
-                  '            PublicDefinitions.Add(System.String.Format("'+name.upper()+'_SHADERS_VIRTUAL_PATH=\"{0}\"", shadersVirtualPath));\n' +
+                  '            PublicDefinitions.Add(System.String.Format("'+name.upper()+'_SHADERS_FULL_PATH=\\"{0}\\"", shadersFullPath));\n' +
+                  '            PublicDefinitions.Add(System.String.Format("'+name.upper()+'_SHADERS_VIRTUAL_PATH=\\"{0}\\"", shadersVirtualPath));\n' +
                   '\n' +
                   '            PublicDependencyModuleNames.AddRange(\n' +
                   '              new string[]\n' +
-                  '                {"Core","CoreUObject","Engine","RenderCore","ShaderCore","RHI","GraphicsTools" }\n' +
+                  '                {"Core","CoreUObject","Engine","RenderCore","ShaderCore","RHI" }\n' +
                   '            );\n' +
                   '        }\n' +
                   '    }\n' +
@@ -69,7 +69,7 @@ def get_csharp_source_shaders(name):
 
 
 def get_module_cpp_source_shaders(name):
-    return Source(module_name + '.cpp', '#include "CoreMinimal.h"\n' +
+    return Source(name + '.cpp', '#include "'+module_name+'.h"\n' + '#include "CoreMinimal.h"\n' +
                   '#include "Modules/ModuleManager.h"\n' +
                   '#include "Runtime/ShaderCore/Public/ShaderCore.h"\n' +
                   '\n' +
@@ -93,7 +93,7 @@ def get_module_plugin_directory(name, add_shader_folder=True):
     if not add_shader_folder:
         csharp_source = get_csharp_source(name)
     else:
-        get_csharp_source_shaders(name)
+        csharp_source = get_csharp_source_shaders(name)
 
     cpp_source = ""
     if not add_shader_folder:

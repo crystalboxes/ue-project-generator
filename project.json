@@ -1,0 +1,6 @@
+{
+  "name" : "Example",
+  "modules" : ["HelloModule", "Whatever"],
+  "plugins" : [],
+  "shader_plugins" : ["TestShaderPlugin"]
+}
