@@ -1,5 +1,8 @@
 {
-  "name" : "ExamplePlugin",
-  "is_shader_plugin" : "false",
-  "modules" : ["TestModule1", "ExampleModule2"]
+  "name": "ExamplePlugin",
+  "is_shader_plugin": "false",
+  "modules": [
+    "TestModule1",
+    "ExampleModule2"
+  ]
 }
