@@ -2,11 +2,13 @@ from scripts.common import *
 from scripts import module_generator
 from scripts import plugin_generator
 
+ENGINE_VERSION = "4.23"
 
 def get_uproject_source(name, modules):
+    # todo expose engine version into settings
     uproject_source = ('{\n' +
                        '	"FileVersion": 3,\n' +
-                       '	"EngineAssociation": "4.21",\n' +
+                       '	"EngineAssociation": "' + ENGINE_VERSION + '",\n' +
                        '	"Category": "",\n' +
                        '	"Description": "",\n' +
                        '	"Modules": [\n')

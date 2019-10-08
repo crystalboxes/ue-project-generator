@@ -1,20 +1,7 @@
 {
-  "name": "ExampleProject",
-  "modules": [
-    "ModuleOne",
-    "ModuleTwo"
-  ],
-  "plugins": [
-    "PluginOne",
-    {
-      "name": "PluginTwo",
-      "modules": [
-        "PluginModuleA",
-        "PluginModuleB"
-      ]
-    }
-  ],
+  "name": "LuaArchive",
+  "modules": [],
+  "plugins": ["SomePlugin0"],
   "shader_plugins": [
-    "TestShaderPlugin"
   ]
 }
